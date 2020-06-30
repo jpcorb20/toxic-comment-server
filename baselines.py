@@ -16,7 +16,7 @@ stop_words = set(stopwords.words('english'))
 # Inspired by Susan Li's code:
 # https://towardsdatascience.com/multi-label-text-classification-with-scikit-learn-30714b7819c5
 
-CATEGORIES = ['toxic', 'severe_toxic', 'obscene', 'threat', 'insult', 'identity_hate']
+TOXIC_CATEGORIES = ['toxic', 'severe_toxic', 'obscene', 'threat', 'insult', 'identity_hate']
 
 
 def clean_text(text):
@@ -67,7 +67,7 @@ xg_pipeline = Pipeline([
 
 print("SVC")
 
-for category in CATEGORIES:
+for category in TOXIC_CATEGORIES:
     print('... Processing {}'.format(category))
     # train the model using X_dtm & y
     SVC_pipeline.fit(X_train, train[category])
@@ -78,7 +78,7 @@ for category in CATEGORIES:
 print()
 print("Logistic")
 
-for category in CATEGORIES:
+for category in TOXIC_CATEGORIES:
     print('... Processing {}'.format(category))
     # train the model using X_dtm & y
     LogReg_pipeline.fit(X_train, train[category])
@@ -90,7 +90,7 @@ print()
 print("XGBoost")
 
 model_dict = dict()
-for category in CATEGORIES:
+for category in TOXIC_CATEGORIES:
     print('... Processing {}'.format(category))
     # train the model using X_dtm & y
     xg_pipeline.fit(X_train, train[category])
