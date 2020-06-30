@@ -99,7 +99,7 @@ for category in CATEGORIES:
     print('Test accuracy is {}'.format(f1_score(test[category], prediction)))
     model_dict[category] = deepcopy(xg_pipeline)
 
-with open("xgboost_model.pickle", "wb") as fp:
+with open("models/xgboost/xgboost_model.pickle", "wb") as fp:
     pickle.dump(model_dict, fp)
 
 print()

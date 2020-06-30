@@ -18,7 +18,7 @@ def load_models():
     """
     global models
 
-    with open("xgboost_model.pickle", "rb") as fp:
+    with open("models/xgboost/xgboost_model.pickle", "rb") as fp:
         models = pickle.load(fp)
 
 
