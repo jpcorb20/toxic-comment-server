@@ -105,7 +105,6 @@ pipelines = {
 
 if __name__ == "__main__":
 
-    # Load data
     df = pd.read_csv("data/train.csv")
     df['comment_text'] = df['comment_text'].map(lambda com: clean_text(com))
 
