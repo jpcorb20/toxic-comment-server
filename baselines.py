@@ -18,6 +18,8 @@ stop_words = set(stopwords.words('english'))
 
 TOXIC_CATEGORIES = ['toxic', 'severe_toxic', 'obscene', 'threat', 'insult', 'identity_hate']
 
+RDN_NUM = 42
+
 
 def clean_text(text):
     text = text.lower()
@@ -38,82 +40,52 @@ def clean_text(text):
 
 
 df = pd.read_csv("data/train.csv")
-
 df['comment_text'] = df['comment_text'].map(lambda com: clean_text(com))
 
-train, test = train_test_split(df, random_state=42, test_size=0.33, shuffle=True)
+train, test = train_test_split(df, random_state=RDN_NUM, test_size=0.33, shuffle=True)
 
-X_train = train.comment_text
-X_test = test.comment_text
-print(X_train.shape)
-print(X_test.shape)
-
-# Define a pipeline combining a text feature extractor with multi lable classifier
+# Define a pipeline combining a text feature extractor with multi label classifier
 
 SVC_pipeline = Pipeline([
-                ('tfidf', TfidfVectorizer(stop_words=stop_words)),
-                ('clf', OneVsRestClassifier(LinearSVC(), n_jobs=1)),
-            ])
+                 ('tfidf', TfidfVectorizer(stop_words=stop_words)),
+                 ('clf', OneVsRestClassifier(LinearSVC(random_state=RDN_NUM), n_jobs=1)),
+              ])
 
 LogReg_pipeline = Pipeline([
-                ('tfidf', TfidfVectorizer(stop_words=stop_words)),
-                ('clf', OneVsRestClassifier(LogisticRegression(solver='sag'), n_jobs=1)),
-            ])
+                    ('tfidf', TfidfVectorizer(stop_words=stop_words)),
+                    ('clf', OneVsRestClassifier(LogisticRegression(solver='sag', random_state=RDN_NUM), n_jobs=1)),
+                  ])
 
 xg_pipeline = Pipeline([
-    ('tfidf', TfidfVectorizer(stop_words=stop_words)),
-    ('clf', OneVsRestClassifier(XGBClassifier())),
-])
+                  ('tfidf', TfidfVectorizer(stop_words=stop_words)),
+                  ('clf', OneVsRestClassifier(XGBClassifier(random_state=RDN_NUM))),
+              ])
 
-print("SVC")
+pipelines = {
+    "svc": SVC_pipeline,
+    "logistic": LogReg_pipeline,
+    "xgboost": xg_pipeline
+}
 
-for category in TOXIC_CATEGORIES:
-    print('... Processing {}'.format(category))
-    # train the model using X_dtm & y
-    SVC_pipeline.fit(X_train, train[category])
-    # compute the testing accuracy
-    prediction = SVC_pipeline.predict(X_test)
-    print('Test accuracy is {}'.format(f1_score(test[category], prediction)))
 
-print()
-print("Logistic")
+def run_pipeline(train, test, name, pipeline, save=True):
+    print(name)
 
-for category in TOXIC_CATEGORIES:
-    print('... Processing {}'.format(category))
-    # train the model using X_dtm & y
-    LogReg_pipeline.fit(X_train, train[category])
-    # compute the testing accuracy
-    prediction = LogReg_pipeline.predict(X_test)
-    print('Test accuracy is {}'.format(f1_score(test[category], prediction)))
+    model_dict = dict()
+    for category in TOXIC_CATEGORIES:
+        pipeline.fit(train.comment_text, train[category])
 
-print()
-print("XGBoost")
+        prediction = pipeline.predict(test.comment_text)
+        print('F1 score of %20s: %.6f' % (category, f1_score(test[category], prediction)))
 
-model_dict = dict()
-for category in TOXIC_CATEGORIES:
-    print('... Processing {}'.format(category))
-    # train the model using X_dtm & y
-    xg_pipeline.fit(X_train, train[category])
-    # compute the testing accuracy
-    prediction = xg_pipeline.predict(X_test)
-    print('Test accuracy is {}'.format(f1_score(test[category], prediction)))
-    model_dict[category] = deepcopy(xg_pipeline)
+        model_dict[category] = deepcopy(xg_pipeline)
 
-with open("models/xgboost/xgboost_model.pickle", "wb") as fp:
-    pickle.dump(model_dict, fp)
+    if save:
+        with open("models/%s/model.pickle" % name, "wb") as fp:
+            pickle.dump(model_dict, fp)
 
-print()
 
-# XGBoost results :
-# ... Processing toxic
-# Test accuracy is 0.7084481725584183
-# ... Processing severe_toxic
-# Test accuracy is 0.2849462365591398
-# ... Processing obscene
-# Test accuracy is 0.7864593583940169
-# ... Processing threat
-# Test accuracy is 0.32710280373831774
-# ... Processing insult
-# Test accuracy is 0.6481149012567325
-# ... Processing identity_hate
-# Test accuracy is 0.36036036036036034
+if __name__ == "__main__":
+    for name, pipeline in pipelines.items():
+        run_pipeline(train, test, name, pipeline)
+        print()

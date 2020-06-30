@@ -11,14 +11,14 @@ app = Flask(__name__)
 models = None
 
 
-def load_models():
+def load_models(model_name="xgboost"):
     """
     Load dict in global variable with models OneVsRest.
     :return: None.
     """
     global models
 
-    with open("models/xgboost/xgboost_model.pickle", "rb") as fp:
+    with open("models/%s/model.pickle" % model_name, "rb") as fp:
         models = pickle.load(fp)
 
 
