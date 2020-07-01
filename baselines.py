@@ -64,7 +64,7 @@ def run_pipeline(train, test, name, pipeline, save=True):
     :param save: save pickle in diretory models/<name>/model.pickle (boolean).
     :return: None.
     """
-    print("F1 scores for %s" % name)
+    print("F1 scores for %s:" % name)
 
     model_dict = dict()
     for category in TOXIC_CATEGORIES:
@@ -106,7 +106,6 @@ pipelines = {
 if __name__ == "__main__":
 
     df = pd.read_csv("data/train.csv")
-    print(df.shape)
     df['comment_text'] = df['comment_text'].map(lambda com: clean_text(com))
 
     train, dev = train_test_split(df, random_state=RDN_NUM, test_size=0.33, shuffle=True)
