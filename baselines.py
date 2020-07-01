@@ -12,9 +12,6 @@ from sklearn.pipeline import Pipeline
 from xgboost import XGBClassifier
 from nltk.corpus import stopwords
 
-# Inspired by Susan Li's code:
-# https://towardsdatascience.com/multi-label-text-classification-with-scikit-learn-30714b7819c5
-
 RDN_NUM = 42
 
 TOXIC_CATEGORIES = ['toxic', 'severe_toxic', 'obscene', 'threat', 'insult', 'identity_hate']
@@ -31,9 +28,8 @@ CLEAN_TEXT_ELEMENTS = [
     (r"\'re", " are "),
     (r"\'d", " would "),
     (r"\'ll", " will "),
-    (r"\'scuse", " excuse "),
-    ('\W', ' '),
-    ('\s+', ' ')
+    (r'\W', ' '),
+    (r'\s+', ' ')
 ]
 
 
@@ -52,6 +48,19 @@ def clean_text(text):
     text = text.strip(' ')
 
     return text
+
+
+def mount_pipeline(classifier, classifier_params):
+    """
+    Mount classifier in OneVsRest configuration pipeline with TFIDF vectorizer as previous stage.
+    :param classifier: sklearn classifier class.
+    :param classifier_params: params of classifier.
+    :return: mounted pipeline (sklearn.pipeline.Pipeline).
+    """
+    return Pipeline([
+             ('tfidf', TfidfVectorizer(stop_words=STOPWORDS)),
+             ('clf', OneVsRestClassifier(classifier(**classifier_params), n_jobs=1)),
+          ])
 
 
 def run_pipeline(train, test, name, pipeline, save=True):
@@ -73,7 +82,7 @@ def run_pipeline(train, test, name, pipeline, save=True):
         prediction = pipeline.predict(test.comment_text)
         print('%20s: %.6f' % (category, f1_score(test[category], prediction)))
 
-        model_dict[category] = deepcopy(xg_pipeline)
+        model_dict[category] = deepcopy(pipeline)
 
     if save:
         with open("models/%s/model.pickle" % name, "wb") as fp:
@@ -82,33 +91,20 @@ def run_pipeline(train, test, name, pipeline, save=True):
 
 # Defining three pipelines combining a TFIDF extractor and multilabel classifiers.
 
-SVC_pipeline = Pipeline([
-                 ('tfidf', TfidfVectorizer(stop_words=STOPWORDS)),
-                 ('clf', OneVsRestClassifier(LinearSVC(random_state=RDN_NUM), n_jobs=1)),
-              ])
-
-LogReg_pipeline = Pipeline([
-                    ('tfidf', TfidfVectorizer(stop_words=STOPWORDS)),
-                    ('clf', OneVsRestClassifier(LogisticRegression(solver='sag', random_state=RDN_NUM), n_jobs=1)),
-                  ])
-
-xg_pipeline = Pipeline([
-                  ('tfidf', TfidfVectorizer(stop_words=STOPWORDS)),
-                  ('clf', OneVsRestClassifier(XGBClassifier(random_state=RDN_NUM))),
-              ])
-
 pipelines = {
-    "svc": SVC_pipeline,
-    "logistic": LogReg_pipeline,
-    "xgboost": xg_pipeline
+    "svc": (LinearSVC, dict(random_state=RDN_NUM)),
+    "logistic": (LogisticRegression, dict(solver='sag', random_state=RDN_NUM)),
+    "xgboost": (XGBClassifier, dict(random_state=RDN_NUM))
 }
+
+pipelines = {k: mount_pipeline(*p) for k, p in pipelines.items()}
 
 if __name__ == "__main__":
 
     df = pd.read_csv("data/train.csv")
-    df['comment_text'] = df['comment_text'].map(lambda com: clean_text(com))
+    df['comment_text'] = df.comment_text.map(lambda t: clean_text(t))
 
-    train, dev = train_test_split(df, random_state=RDN_NUM, test_size=0.33, shuffle=True)
+    train, dev = train_test_split(df, random_state=RDN_NUM, test_size=0.20, shuffle=True)
 
     for name, pipeline in pipelines.items():
         run_pipeline(train, dev, name, pipeline)
