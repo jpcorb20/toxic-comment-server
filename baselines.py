@@ -1,3 +1,4 @@
+import os
 import re
 import pickle
 from copy import deepcopy
@@ -92,6 +93,9 @@ def run_pipeline(train, test, name, pipeline, save=True):
     print("Macro-F1: %.6f" % np.mean(results))
 
     if save:
+        if not os.path.exists("models/%s" % name):
+            os.mkdir("models/%s" % name)
+
         with open("models/%s/model.pickle" % name, "wb") as fp:
             pickle.dump(model_dict, fp)
 
