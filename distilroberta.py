@@ -1,5 +1,3 @@
-import os
-import sklearn
 import torch
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 
