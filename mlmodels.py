@@ -1,7 +1,7 @@
 import os
 import pickle
 
-models = None
+models = dict()
 
 
 def load_models(model_name="svc"):
@@ -25,7 +25,7 @@ def infer_labels(text):
     """
     global models
 
-    if models is None:
+    if isinstance(models, dict) and len(models) == 0:
         load_models()
 
     return {k: int(m.predict([text])[0]) for k, m in models.items()}
