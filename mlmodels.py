@@ -1,3 +1,4 @@
+import os
 import pickle
 
 models = None
@@ -9,6 +10,9 @@ def load_models(model_name="svc"):
     :return: None.
     """
     global models
+
+    assert "models/%s/model.pickle" % model_name not in os.listdir(), "You should run baseline to generate models."
+
     with open("models/%s/model.pickle" % model_name, "rb") as fp:
         models = pickle.load(fp)
 
