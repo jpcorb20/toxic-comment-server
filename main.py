@@ -2,8 +2,8 @@ import os
 from flask import Flask, request, abort, jsonify
 from dotenv import load_dotenv
 
-import distilroberta as dr
-import mlmodels as ml
+from distilroberta import infer_labels as dr_infer_labels
+from mlmodels import infer_labels as ml_infer_labels
 
 load_dotenv()
 
@@ -25,10 +25,10 @@ def main_route():
         if "model" in request.args:
 
             if request.args["model"] == "distilroberta":
-                labels = dr.infer_labels(text)
+                labels = dr_infer_labels(text)
 
         else:
-            labels = ml.infer_labels(text)
+            labels = ml_infer_labels(text)
         
         return jsonify(labels)
     else:
