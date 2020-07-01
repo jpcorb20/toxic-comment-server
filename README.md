@@ -153,3 +153,13 @@ For Windows user, the _torch_ dependency require this specific installation:
 To run the tests, there is this command:
 
     pytest --cov=. --cov-report=term-missing tests\
+
+## Production-ready Docker version
+
+Build the image for better reproducibility and get a production-ready image (might take some time):
+
+    docker build -t toxic-comment-server
+
+Run a container with environment variables:
+
+    docker run -p 8080:8080 --env DEBUG=0 --env [...OTHER ENV...] toxic-comment-server
