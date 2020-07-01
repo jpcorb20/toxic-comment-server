@@ -14,6 +14,9 @@ from sklearn.linear_model import LogisticRegression
 from xgboost import XGBClassifier
 from sklearn.metrics import f1_score
 from nltk.corpus import stopwords
+import nltk
+
+nltk.download('stopwords')
 
 RDN_NUM = 42
 
