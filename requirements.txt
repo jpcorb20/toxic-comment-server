@@ -36,12 +36,12 @@ sentencepiece==0.1.92
 six==1.15.0
 sklearn==0.0
 threadpoolctl==2.1.0
-tokenizers==0.8.0rc4
-torch==1.5.1
 tqdm==4.47.0
-transformers==3.0.0
 urllib3==1.25.9
 wcwidth==0.2.5
 Werkzeug==1.0.1
 xgboost==1.1.1
 zipp==3.1.0
+torch==1.5.1
+tokenizers==0.8.0rc4
+transformers==3.0.0
