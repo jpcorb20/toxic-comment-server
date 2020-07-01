@@ -2,6 +2,7 @@ import re
 import pickle
 from copy import deepcopy
 import pandas as pd
+import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -76,13 +77,19 @@ def run_pipeline(train, test, name, pipeline, save=True):
     print("F1 scores for %s:" % name)
 
     model_dict = dict()
+    results = list()
     for category in TOXIC_CATEGORIES:
         pipeline.fit(train.comment_text, train[category])
 
         prediction = pipeline.predict(test.comment_text)
+        F1 = f1_score(test[category], prediction)
         print('%20s: %.6f' % (category, f1_score(test[category], prediction)))
 
+        results.append(F1)
+
         model_dict[category] = deepcopy(pipeline)
+
+    print("Macro-F1: %.6f" % np.mean(results))
 
     if save:
         with open("models/%s/model.pickle" % name, "wb") as fp:
