@@ -1,5 +1,6 @@
 import os
 from flask import Flask, request, abort, jsonify
+from flask_basicauth import BasicAuth
 from dotenv import load_dotenv
 
 from distilroberta import infer_labels as dr_infer_labels
@@ -10,6 +11,13 @@ load_dotenv()
 DEBUG = bool(int(int(os.environ["DEBUG"])))
 
 app = Flask(__name__)
+
+if not DEBUG:
+    # Authentification to protect access.
+    app.config['BASIC_AUTH_USERNAME'] = os.environ['BASIC_AUTH_USERNAME']
+    app.config['BASIC_AUTH_PASSWORD'] = os.environ['BASIC_AUTH_PASSWORD']
+    app.config['BASIC_AUTH_FORCE'] = True
+    basic_auth = BasicAuth(app)
 
 
 @app.route("/toxic_comment", methods=["GET"])
