@@ -83,17 +83,17 @@ def run_pipeline(train, test, name, pipeline, save=True):
 # Defining three pipelines combining a TFIDF extractor and multilabel classifiers.
 
 SVC_pipeline = Pipeline([
-                 ('tfidf', TfidfVectorizer(STOPWORDS=STOPWORDS)),
+                 ('tfidf', TfidfVectorizer(stop_words=STOPWORDS)),
                  ('clf', OneVsRestClassifier(LinearSVC(random_state=RDN_NUM), n_jobs=1)),
               ])
 
 LogReg_pipeline = Pipeline([
-                    ('tfidf', TfidfVectorizer(STOPWORDS=STOPWORDS)),
+                    ('tfidf', TfidfVectorizer(stop_words=STOPWORDS)),
                     ('clf', OneVsRestClassifier(LogisticRegression(solver='sag', random_state=RDN_NUM), n_jobs=1)),
                   ])
 
 xg_pipeline = Pipeline([
-                  ('tfidf', TfidfVectorizer(STOPWORDS=STOPWORDS)),
+                  ('tfidf', TfidfVectorizer(stop_words=STOPWORDS)),
                   ('clf', OneVsRestClassifier(XGBClassifier(random_state=RDN_NUM))),
               ])
 
@@ -106,6 +106,7 @@ pipelines = {
 if __name__ == "__main__":
 
     df = pd.read_csv("data/train.csv")
+    print(df.shape)
     df['comment_text'] = df['comment_text'].map(lambda com: clean_text(com))
 
     train, dev = train_test_split(df, random_state=RDN_NUM, test_size=0.33, shuffle=True)
