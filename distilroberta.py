@@ -15,9 +15,6 @@ def load_distilroberta():
     """
     global tokenizer, model
 
-    assert 'models/distilroberta/model' not in os.listdir(),\
-        "You should run finetuning to generate model or fetch weights."
-
     tokenizer = AutoTokenizer.from_pretrained('jpcorb20/toxic-detector-distilroberta')
     model = AutoModelForSequenceClassification.from_pretrained('jpcorb20/toxic-detector-distilroberta')
     model.eval()
