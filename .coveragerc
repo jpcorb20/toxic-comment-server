@@ -1,0 +1,13 @@
+[run]
+omit =
+    venv\*
+    venv/*
+    tests\*
+    tests/*
+    __init__.py
+    analysis.py
+
+[report]
+
+exclude_lines =
+    if __name__ == .__main__.:
