@@ -24,7 +24,9 @@ Since it is a very known task in scientific and gray literature, we found intere
 
 - Transformer-based approach: [Source 2](https://towardsdatascience.com/transformers-for-multilabel-classification-71a1a0daf5e1).
 
-Both projects have very bad coding.
+Both projects have very bad coding, mistakes and wrong evaluation metrics, but we inspired our approaches from them to start from some points and push the server into production.
+
+We want to constrast baseline approach like Source 1 versus SOTA one like Source 2.
 
 ## Analysis
 
@@ -52,9 +54,9 @@ we also noted a lot of noise and language contractions in text since they are co
 
 We have two approaches: the ML pipeline and the transformer-based one.
 The first contain baseline classification models with TF-IDF features in one vs rest setup.
-The second consist of current SOTA model of which we cannot simply ignore even if they are harder to put into production.
+The second consist of current SOTA model which have revolutionized NLP even if they are harder to put into production.
 
-We do not focus on hyperparameter optimization in this project.
+We do not focus on hyperparameter optimization in this project. We will take default know configuration and use our multiple models to make a final choice.
 
 ### Classical ML NLP pipeline
 
@@ -78,7 +80,7 @@ Macro-F1: 0.553971
 
 ##### Logistic Regression
 
-Model well-known in ML with good interpretability. It is often too simple for task.
+Model well-known in ML with good interpretability. It is equivalent to one artificial neuron but often too simple for high-level task.
 
 F1 scores for logistic:
 - toxic: 0.721715
@@ -92,7 +94,7 @@ Macro-F1: 0.480943
 
 ##### XGBoost
 
-An ensemble classifier that is considered very effective in many task by the ML community.
+An ensemble classifier using boosting that is considered very effective in many tasks by the ML community.
 
 F1 scores for xgboost:
 - toxic: 0.710846
@@ -106,13 +108,25 @@ Macro-F1: 0.530985
 
 ### Pre-trained Transformer
 
-In the last couple of years, pre-trained transformer models have completly change the NLP field and SOTA.
-They are very huge models pre-trained on massive corpora. Furthermore, they have established performances often above human levels (e.g.: SQuaD).
+In the last couple of years, pre-trained transformer models have completely change the NLP field and SOTA.
+They are very huge models pre-trained on massive corpora.
+Furthermore, they have established performances often above human levels (e.g.: SQuaD) since they are very effective for high-level task like detecting toxic comments.
+
+To fine-tune from pre-trained model run:
+
+    python transformer_finetune.py
+
+The final fine-tune model was pushed on huggingface.co's S3 bucket as:
+
+    jpcorb20/toxic-detector-distilroberta
+
+It is directly downloaded and used by the _distilroberta_ module.
 
 ##### DistilRoBERTa
 
-We chose the DistilRoBERTa model for two aspects: RoBERTa is the most optimized and robust available model
-and the distillation process makes it smaller by 30-40% while maintaining most performances which is great for production.
+We chose the DistilRoBERTa model for two reasons: RoBERTa is the most optimized and robust available model
+and the distillation process makes it smaller by 30-40% while maintaining most performances
+which is great for production.
 
 F1 scores for distilroberta:
 - toxic: 0.72
