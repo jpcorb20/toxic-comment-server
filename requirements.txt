@@ -47,7 +47,7 @@ wcwidth==0.2.5
 Werkzeug==1.0.1
 xgboost==1.1.1
 zipp==3.1.0
-torch==1.5.1+cu101
-torchvision==0.6.1+cu101
+torch==1.5.1
+torchvision==0.6.1
 tokenizers==0.8.0rc4
 transformers==3.0.0
