@@ -167,7 +167,7 @@ def train(train_dataloader, validation_dataloader):
 def load_test_data():
     test_df = pd.read_csv('data/test.csv')
     test_labels_df = pd.read_csv('data/test_labels.csv')
-    test_df = test_df.join(test_labels_df, on='id')
+    test_df = test_df.join(test_labels_df.set_index("id"), on='id')
 
     test_label_cols = list(test_df.columns[2:])
 
@@ -234,10 +234,10 @@ def evaluation(test_dataloader):
 def compute_final_evaluation(test_dataloader, test_labels):
     true_bools, pred_bools = evaluation(test_dataloader)
 
-    clf_report = classification_report(true_bools, pred_bools, target_names=test_labels)
+    report = classification_report(true_bools, pred_bools, target_names=test_labels)
 
-    with open('classification_report.txt', 'wb') as fp:
-        pickle.dump(clf_report, fp)
+    with open('report.txt', 'wb') as fp:
+        pickle.dump(report, fp)
 
 
 if __name__ == "__main__":
