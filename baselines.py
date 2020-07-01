@@ -3,13 +3,13 @@ import pickle
 from copy import deepcopy
 import pandas as pd
 from sklearn.model_selection import train_test_split
+from sklearn.pipeline import Pipeline
 from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics import f1_score
 from sklearn.multiclass import OneVsRestClassifier
 from sklearn.svm import LinearSVC
 from sklearn.linear_model import LogisticRegression
-from sklearn.pipeline import Pipeline
 from xgboost import XGBClassifier
+from sklearn.metrics import f1_score
 from nltk.corpus import stopwords
 
 RDN_NUM = 42
