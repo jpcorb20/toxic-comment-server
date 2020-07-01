@@ -58,6 +58,9 @@ The second consist of current SOTA model which have revolutionized NLP even if t
 
 We do not focus on hyperparameter optimization in this project. We will take default know configuration and use our multiple models to make a final choice.
 
+We evaluate our models with the Macro F1 metric which the average of individual F1 scores.
+We use F1 to optimize both precise detection and finding most toxic comments (recall).
+
 ### Classical ML NLP pipeline
 
 To train all baseline models run:
@@ -138,6 +141,8 @@ F1 scores for distilroberta:
 
 Macro-F1: 0.61
 
+Thus, this model is the most performing one with great improvements on most labels with best improvements on _threat_ and _identity_hate_.
+
 ## Install dependencies
 
 This project uses the _pip_ command to install dependencies without issues.
@@ -156,6 +161,8 @@ To run the tests, there is this command:
 
 ## Production-ready Docker version
 
+All tests should be completed before building and releasing the container.
+
 Build the image for better reproducibility and get a production-ready image (might take some time):
 
     docker build -t toxic-comment-server
@@ -163,3 +170,13 @@ Build the image for better reproducibility and get a production-ready image (mig
 Run a container with environment variables:
 
     docker run -p 8080:8080 --env DEBUG=0 --env [...OTHER ENV...] toxic-comment-server
+
+## Futher works
+
+- Finish all docstring.
+- 100% coverage of code with unit tests (mostly transformer code).
+- Enhance security with POST request instead of GET in main.py.
+- Do hyperparameter optimization to enhance model performances.
+- Generate a TinyBert version of transformer for very optimized production-ready model.
+- Add a CI for better upgrades and smooth deployments.
+- Deploy container.
