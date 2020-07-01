@@ -62,7 +62,7 @@ To train all baseline models run:
 
     python baselines.py
 
-#### Linear SVC
+##### Linear SVC
 
 Model based on SVM architecture for classification known in NLP to be SOTA before the deep learning era.
 
@@ -76,7 +76,7 @@ F1 scores for svc:
 
 Macro-F1: 0.553971
 
-#### Logistic Regression
+##### Logistic Regression
 
 Model well-known in ML with good interpretability. It is often too simple for task.
 
@@ -90,7 +90,7 @@ F1 scores for logistic:
 
 Macro-F1: 0.480943
 
-#### XGBoost
+##### XGBoost
 
 An ensemble classifier that is considered very effective in many task by the ML community.
 
@@ -106,7 +106,23 @@ Macro-F1: 0.530985
 
 ### Pre-trained Transformer
 
-#### DistilRoBERTa
+In the last couple of years, pre-trained transformer models have completly change the NLP field and SOTA.
+They are very huge models pre-trained on massive corpora. Furthermore, they have established performances often above human levels (e.g.: SQuaD).
+
+##### DistilRoBERTa
+
+We chose the DistilRoBERTa model for two aspects: RoBERTa is the most optimized and robust available model
+and the distillation process makes it smaller by 30-40% while maintaining most performances which is great for production.
+
+F1 scores for distilroberta:
+- toxic: 0.72
+- severe_toxic: 0.38
+- obscene: 0.72
+- threat: 0.52
+- insult: 0.69
+- identity_hate: 0.60
+
+Macro-F1: 0.61
 
 ## Install dependencies
 
@@ -122,4 +138,4 @@ For Windows user, the _torch_ dependency require this specific installation:
 
 To run the tests, there is this command:
 
-    pytest ...
+    pytest --cov=. --cov-report=term-missing tests\
