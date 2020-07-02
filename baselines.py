@@ -117,7 +117,7 @@ pipelines = {k: mount_pipeline(*p) for k, p in pipelines.items()}
 if __name__ == "__main__":
 
     if not os.path.exists("models"):
-        os.mkdir("models)
+        os.mkdir("models")
 
     df = pd.read_csv("data/train.csv")
     df['comment_text'] = df.comment_text.map(lambda t: clean_text(t))
