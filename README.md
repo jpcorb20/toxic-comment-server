@@ -16,6 +16,8 @@ is a multi-label classification task containing a set of 6 possible labels:
 
 Thus, any sample can have between 0 and 6 labels at a time.
 
+Data files (_train.csv_, _test.csv_ and _test_labels.csv_) from Kaggle should be put in _data_.
+
 ## References
 
 Since it is a very known task in scientific and gray literature, we found interesting previous work on _Toward Data Science_:
