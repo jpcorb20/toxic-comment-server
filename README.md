@@ -18,18 +18,6 @@ Thus, any sample can have between 0 and 6 labels at a time.
 
 Data files (_train.csv_, _test.csv_ and _test_labels.csv_) from Kaggle should be put in _data_.
 
-## References
-
-Since it is a very known task in scientific and gray literature, we found interesting previous work on _Toward Data Science_:
-
-- ML and NLP pipeline approach: [Source 1](https://towardsdatascience.com/multi-label-text-classification-with-scikit-learn-30714b7819c5).
-
-- Transformer-based approach: [Source 2](https://towardsdatascience.com/transformers-for-multilabel-classification-71a1a0daf5e1).
-
-Both projects have very bad coding, mistakes and wrong evaluation metrics.
-
-We want to constrast a baseline approach like Source 1 versus SOTA one like Source 2.
-
 ## Analysis
 
 This part correspond to this script:
@@ -213,3 +201,11 @@ Auth is basic one :
 - Generate a TinyBert version of transformer for very optimized production-ready model.
 - Add a CI for better upgrades and smooth deployments.
 - Deploy container on cloud.
+
+## References
+
+Since it is a very known task in scientific and gray literature, we found interesting previous work on _Toward Data Science_:
+
+- ML and NLP pipeline approach: [Source 1](https://towardsdatascience.com/multi-label-text-classification-with-scikit-learn-30714b7819c5).
+
+- Transformer-based approach: [Source 2](https://towardsdatascience.com/transformers-for-multilabel-classification-71a1a0daf5e1).
