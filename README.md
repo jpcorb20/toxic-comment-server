@@ -129,6 +129,12 @@ To fine-tune from pre-trained model run:
 
     python transformer_finetune.py
 
+To pre-download the fine-tuned model, you can run the example in:
+
+    python distilroberta.py
+    
+It will take some time.
+
 The final fine-tune model was pushed on my huggingface.co's account (a S3 bucket) as:
 
     jpcorb20/toxic-detector-distilroberta
@@ -183,12 +189,27 @@ Run a container with environment variables from _.env_ file:
 
 _gunicorn_ is used for production.
 
+## API
+
+Auth is basic one :
+
+    username: toxic-filtering-agent
+    password: nc5wbW8nxgY6Vf48
+
+#### GET : /toxic_comment?
+
+- _text_: your text between single quotes.
+- _model_: to access transformer model send 'distilroberta' (optional, default SVC model).
+
+    http://localhost:8080/toxic_comment?text='YOUR TEXT'&model='model'
+
 ## Futher works
 
 - Finish all docstring.
 - 100% coverage of code with unit tests (mostly transformer code).
 - Enhance security with POST request instead of GET in main.py.
 - Do hyperparameter optimization to enhance model performances.
+- Ensemble models to push results.
 - Generate a TinyBert version of transformer for very optimized production-ready model.
 - Add a CI for better upgrades and smooth deployments.
 - Deploy container on cloud.
