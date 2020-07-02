@@ -24,9 +24,9 @@ Since it is a very known task in scientific and gray literature, we found intere
 
 - Transformer-based approach: [Source 2](https://towardsdatascience.com/transformers-for-multilabel-classification-71a1a0daf5e1).
 
-Both projects have very bad coding, mistakes and wrong evaluation metrics, but we inspired our approaches from them to start from some points and push the server into production.
+Both projects have very bad coding, mistakes and wrong evaluation metrics.
 
-We want to constrast baseline approach like Source 1 versus SOTA one like Source 2.
+We want to constrast a baseline approach like Source 1 versus SOTA one like Source 2.
 
 ## Analysis
 
@@ -62,6 +62,14 @@ We evaluate our models with the Macro F1 metric which the average of individual 
 We use F1 to optimize both precise detection and finding most toxic comments (recall).
 
 ### Classical ML NLP pipeline
+
+The pipeline is linear and done with _sklearn_:
+
+- cleaning text
+- processing vocabulary and TFIDF
+- classifier in one vs rest setting
+
+All pipelines are saved with pickle as dictionary with trained pipeline as values. This way dict comprehension is useful to infer labels iteratively.
 
 To train all baseline models run:
 
@@ -119,7 +127,7 @@ To fine-tune from pre-trained model run:
 
     python transformer_finetune.py
 
-The final fine-tune model was pushed on huggingface.co's S3 bucket as:
+The final fine-tune model was pushed on my huggingface.co's account (a S3 bucket) as:
 
     jpcorb20/toxic-detector-distilroberta
 
@@ -155,21 +163,23 @@ For Windows user, the _torch_ dependency require this specific installation:
 
 ## Tests
 
-To run the tests, there is this command:
+To run the unit tests, it is this command:
 
     pytest --cov=. --cov-report=term-missing tests\
 
-## Production-ready Docker version
-
 All tests should be completed before building and releasing the container.
+
+## Production-ready Docker version
 
 Build the image for better reproducibility and get a production-ready image (might take some time):
 
     docker build -t toxic-comment-server
 
-Run a container with environment variables:
+Run a container with environment variables from _.env_ file:
 
     docker run -p 8080:8080 --env DEBUG=0 --env [...OTHER ENV...] toxic-comment-server
+
+_gunicorn_ is used for production.
 
 ## Futher works
 
@@ -179,4 +189,4 @@ Run a container with environment variables:
 - Do hyperparameter optimization to enhance model performances.
 - Generate a TinyBert version of transformer for very optimized production-ready model.
 - Add a CI for better upgrades and smooth deployments.
-- Deploy container.
+- Deploy container on cloud.
