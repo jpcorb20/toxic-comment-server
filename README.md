@@ -187,6 +187,7 @@ Auth is basic one :
 #### GET : /toxic_comment?
 
 - _text_: your text between single quotes.
+
 - _model_: to access transformer model send 'distilroberta' (optional, default SVC model).
 
     http://localhost:8080/toxic_comment?text='YOUR TEXT'&model='model'
